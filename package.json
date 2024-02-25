@@ -1,16 +1,16 @@
 {
   "name": "kpit",
   "version": "1.1.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Vahid Aslani",
+  "main": "src/main.ts",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
+    "build": "tsc",
+    "start": "node dist/main.js",
     "dev": "tsc -w -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "kpit": "dist/index.js"
+    "kpit": "dist/main.js"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +25,7 @@
     "ts-node": "^10.9.2",
     "typeorm": "^0.3.20"
   },
+
   "devDependencies": {
     "@types/node": "^20.11.20"
   }

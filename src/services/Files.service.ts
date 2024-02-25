@@ -1,7 +1,3 @@
-#!/usr/bin/env node
-
-import { dataSource } from './src/database/ormconfig';
-import { main } from './src/password';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -42,16 +38,8 @@ const checkAndCreateConfigFile = () => {
   console.log('Config file created successfully.');
 };
 
-dataSource
-  .initialize()
-  .then(() => {
-    checkAndCreateDirectory();
-    checkAndCreateDatabaseFile();
-    checkAndCreateConfigFile();
-    main();
-  })
-  .catch((err) => {
-    console.log(err);
-
-    // logger.error('Error during Data Source initialization', err);
-  });
+export const createFiles = () => {
+  checkAndCreateDirectory();
+  checkAndCreateDatabaseFile();
+  checkAndCreateConfigFile();
+};

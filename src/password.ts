@@ -1,13 +1,39 @@
 import { Command } from 'commander';
 import { decrypt, encrypt } from './utils/encrypt';
 import { Password } from './database/entities/password.entity';
-import { dataSource } from '../ormconfig';
+import { dataSource } from './database/ormconfig';
 import * as readlineSync from 'readline-sync';
 import { LOG_COLORS } from './config/log-colors';
 import { Secret } from './database/entities/secret.entity';
+import { hashString, validateHashedString } from './utils/hashing';
 
-const SetNewPassword = async () => {
+const setNewPassword = async () => {
   const passrepo = dataSource.getRepository(Password);
+  const secretRepo = dataSource.getRepository(Secret);
+  let secretKey: string = '1';
+
+  const hasSecretKey = await checkSecretKey();
+
+  let validSecret = false;
+
+  while (!validSecret) {
+    if (hasSecretKey) {
+      secretKey = readlineSync.question('Enter your secret key: ', {
+        hideEchoBack: true,
+      });
+      const { secret: storedSecretKey } = await secretRepo.findOneBy({});
+      validSecret = validateHashedString(secretKey, storedSecretKey);
+
+      if (!validSecret) {
+        console.log(
+          LOG_COLORS.FgRed,
+          'Secret key does not match! Please try again.',
+          LOG_COLORS.FgWhite,
+        );
+      }
+    }
+  }
+
   const passName = readlineSync.question('Enter password name: ');
   const password = readlineSync.question('Enter your password: ', {
     hideEchoBack: true,
@@ -27,7 +53,7 @@ const SetNewPassword = async () => {
   await passrepo.save(newPass);
 };
 
-const DeletePasswordByName = async () => {
+const deletePasswordByName = async () => {
   const passrepo = dataSource.getRepository(Password);
   const passName = readlineSync.question(
     'Enter password name you want to delete: ',
@@ -40,18 +66,31 @@ const DeletePasswordByName = async () => {
     return console.log(LOG_COLORS.FgRed, 'no passwoed found for this name');
 };
 
-const SetSecret = async () => {
+const setSecret = async () => {
   const secretRepo = dataSource.getRepository(Secret);
   const secretExists = await secretRepo.exists({});
-  if (secretExists) console.error(LOG_COLORS.FgRed, 'already have secret key');
 
-  const secret = readlineSync.questionNewPassword('enter new secret-key : ');
+  if (secretExists) {
+    console.error(LOG_COLORS.FgRed, 'already have secret key');
+    return;
+  }
+
+  const secret = readlineSync.question('enter new secret-key : ', {
+    hideEchoBack: true,
+  });
+
+  const hasedSecret = hashString(secret);
 
   const secretEntity = secretRepo.create({
-    secret,
+    secret: hasedSecret,
   });
 
   await secretRepo.save(secretEntity);
+};
+
+const checkSecretKey = async (): Promise<boolean> => {
+  const secretRepo = dataSource.getRepository(Secret);
+  return await secretRepo.existsBy({});
 };
 
 export const main = async () => {
@@ -65,6 +104,7 @@ export const main = async () => {
   if (program.args.length === 0) {
     const menuOptions = [
       'Enter new Password',
+      'Find Password',
       'Delete password',
       'Set/Edit secret key',
     ];
@@ -81,13 +121,16 @@ export const main = async () => {
 
     switch (selectedOption) {
       case menuOptions[0]:
-        SetNewPassword();
+        setNewPassword();
         break;
       case menuOptions[1]:
-        DeletePasswordByName();
+        // deletePasswordByName();
         break;
       case menuOptions[2]:
-        SetSecret();
+        deletePasswordByName();
+        break;
+      case menuOptions[3]:
+        setSecret();
         break;
       default:
         console.log('Invalid option');

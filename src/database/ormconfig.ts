@@ -1,8 +1,13 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
+import * as os from 'os';
+import * as path from 'path';
+
+const homeDirectory = os.homedir();
+const dbFilePath = path.resolve(path.join(homeDirectory, '.kpit', 'db.sqlite'));
 
 const dataSourceOptions = {
   type: 'sqlite',
-  database: './db.sqlite',
+  database: dbFilePath,
   entities: [__dirname + '/**/*.entity{.ts,.js}'],
   // migrations: ['./src/database/migrations/*.ts'],
   cli: {

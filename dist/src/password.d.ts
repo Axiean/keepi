@@ -1,1 +1,1 @@
-export declare const main: () => void;
+export declare const main: () => Promise<void>;

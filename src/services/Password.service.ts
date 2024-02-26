@@ -77,8 +77,13 @@ export const deletePasswordByName = async () => {
     return;
   }
 
-  await PasswordRepository.remove(passwordEntity);
-  successLog(`Password named ${passName} deleted.`);
+  try {
+    await PasswordRepository.remove(passwordEntity);
+    successLog(`Password named ${passName} deleted.`);
+    return;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const showPasswordsList = async () => {

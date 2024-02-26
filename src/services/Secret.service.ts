@@ -1,13 +1,13 @@
-import { LOG_COLORS } from '../config/log-colors';
 import { SecretRepository } from '../database/repositories/secret.repository';
 import * as readlineSync from 'readline-sync';
 import { hashString, validateHashedString } from '../utils/hashing';
+import { errorLog } from './Logger.service';
 
 export async function setSecret() {
   const secretExists = await this.secretRepository.exists({});
 
   if (secretExists) {
-    console.error(LOG_COLORS.FgRed, 'Already have secret key');
+    errorLog('Already have secret key');
     return;
   }
 
@@ -24,7 +24,7 @@ export async function setSecret() {
   await this.secretRepository.save(secretEntity);
 }
 
-export async function checkSecretKey() {
+export async function checkSecretKeyExistance() {
   return await SecretRepository.existsBy({});
 }
 

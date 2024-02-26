@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { dataSource } from './database/ormconfig';
-import { main } from './password';
+import { main } from './commands';
 import { createFiles } from './services/Files.service';
+import { errorLog } from './services/Logger.service';
 
 dataSource
   .initialize()
@@ -11,7 +12,5 @@ dataSource
     main();
   })
   .catch((err) => {
-    console.log(err);
-
-    // logger.error('Error during Data Source initialization', err);
+    errorLog(err);
   });

@@ -1,48 +1,63 @@
 import { PasswordRepository } from '../database/repositories/password.repository';
-import { checkSecretKey, validateSecretKey } from './Secret.service';
-import { LOG_COLORS } from '../config/log-colors';
+import { checkSecretKeyExistance, validateSecretKey } from './Secret.service';
 import * as readlineSync from 'readline-sync';
 import { encrypt } from '../utils/encrypt';
+import { errorLog, successLog } from './Logger.service';
 
-export const getPasswordByName = async (passName: string) => {
-  return await PasswordRepository.findOneBy({ passName });
-};
-
-export const setNewPassword = async () => {
-  const hasSecretKey = await checkSecretKey();
-
+const checkSecretValidity = async () => {
+  const hasSecretKey = await checkSecretKeyExistance();
   let validSecret = false;
+  let enteredSecret = '';
 
   while (!validSecret) {
     if (hasSecretKey) {
-      const secretKey = readlineSync.question('Enter your secret key: ', {
+      enteredSecret = readlineSync.question('Enter your secret key: ', {
         hideEchoBack: true,
       });
 
-      validSecret = await validateSecretKey(secretKey);
+      validSecret = await validateSecretKey(enteredSecret);
 
       if (!validSecret) {
-        console.log(
-          LOG_COLORS.FgRed,
-          'Secret key does not match! Please try again.',
-          LOG_COLORS.FgWhite,
-        );
+        errorLog('Secret key does not match! Please try again.');
+      } else {
+        return enteredSecret;
       }
     }
   }
+};
 
-  const passName = readlineSync.question('Enter password name: ');
-  const password = readlineSync.question('Enter your password: ', {
-    hideEchoBack: true,
-    cancel: true,
-  });
+const checkUniquePassName = async () => {
+  let checkUniquePassName = true;
+  let passName = '';
+
+  while (checkUniquePassName) {
+    passName = readlineSync.question('Enter password name: ');
+    checkUniquePassName = await PasswordRepository.existsBy({ passName });
+    if (checkUniquePassName) {
+      errorLog(`Password named ${passName} exists , Try another name...`);
+    }
+  }
+  return passName;
+};
+
+export const setNewPassword = async (password?: string) => {
+  const secret = await checkSecretValidity();
+  if (!secret) return;
+
+  const passName = await checkUniquePassName();
+
+  if (!password) {
+    password = readlineSync.question('Enter your password: ', {
+      hideEchoBack: true,
+    });
+  }
 
   if (!password || !passName) {
-    console.log('Both password and name are required.');
+    errorLog('Both password and name are required.');
     return;
   }
 
-  const encryptedPassword = encrypt(password, '1');
+  const encryptedPassword = encrypt(password, secret);
 
   const newPass = PasswordRepository.create({
     encryptedPassword,
@@ -50,6 +65,20 @@ export const setNewPassword = async () => {
   });
 
   await PasswordRepository.save(newPass);
+
+  successLog(`password named ${newPass.passName} created succesfully`);
+};
+
+export const getPasswordByName = async (passName?: string) => {
+  const secret = await checkSecretValidity();
+  if (!secret) return;
+
+  if (!passName) {
+    passName = readlineSync.question('Enter password name: ');
+  }
+
+  const passwordEntity = await PasswordRepository.findOneBy({ passName });
+  if (!passwordEntity) errorLog(`password named ${passName} doesnt exist.`);
 };
 
 export const deletePasswordByName = async () => {
@@ -57,9 +86,9 @@ export const deletePasswordByName = async () => {
   const passwordEntity = await PasswordRepository.findOneBy({ passName });
 
   if (!passwordEntity) {
-    console.log(LOG_COLORS.FgRed, 'No password found for this name');
+    errorLog('No password found for this name');
     return;
   }
 
-  await PasswordRepository.remove(passwordEntity);
+  await PasswordRepository.delete(passwordEntity);
 };

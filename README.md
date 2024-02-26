@@ -42,6 +42,14 @@ Allows the user to set or edit the secret key used for encryption.
 5. CANCEL
    Cancel and exit the menu.
 
+## Local Database
+
+When you run the `kpi` command for the first time, `keepi` will create a local database in your home directory (`~`).
+
+All passwords entered using `keepi` will be securely encrypted using the user-provided secret key and stored within this local database. It is important to note that the database is unique to each user and is only accessible from the machine where the `kpi` command is executed.
+
+Ensure the security of your home directory and regularly back up the contents of the local database, especially if you plan to use `keepi` across multiple machines or in case of system upgrades or changes.
+
 ## Contributing
 
 Contributions are always welcome!

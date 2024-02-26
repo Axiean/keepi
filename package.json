@@ -1,7 +1,10 @@
 {
-  "name": "kpr",
-  "version": "1.6.0",
-  "author" : "Vahid Aslani" ,
+  "name": "keepi",
+  "version": "1.0.0",
+  "author" :{
+    "name" :  "Vahid Aslani" , 
+    "email" :  "axieans@gmail.com"
+  } ,
   "description": "",
   "main": "src/main.ts",
   "scripts": {
@@ -11,7 +14,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "kpr": "dist/main.js"
+    "kpi": "dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Axiean/keepi"
+  },
+  "bugs": {
+    "url": "https://github.com/Axiean/keepi"
   },
   "keywords": ["keep password" , "encryption" ],
   "license": "MIT",

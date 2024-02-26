@@ -9,7 +9,7 @@
 To install `keepi`, run the following npm command:
 
 ```bash
-  npm i keepi@latest
+ sudo npm i -g keepi@latest
 ```
 
 ## Usage
@@ -35,9 +35,9 @@ Decrypts and displays the password if found.
 Remove a stored password by specifying the password name.
 Requires confirmation before deletion.
 
-4. Set/Edit Secret Key
+4. Edit Secret Key
 
-Allows the user to set or edit the secret key used for encryption.
+Allows the user to edit the secret key used for encryption.
 
 5. CANCEL
    Cancel and exit the menu.

@@ -61,7 +61,11 @@ export const main = async () => {
     console.log('\nExiting...');
     process.exit(0);
   });
-  program.description('An application for displaying a password').parse();
+  program
+    .description(
+      'Keepi is a Node.js npm package that allows users to securely store and manage passwords locally on their own machine.',
+    )
+    .parse();
 
   const options = program.opts();
 

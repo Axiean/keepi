@@ -1,6 +1,7 @@
 {
   "name": "kpr",
-  "version": "1.2.0",
+  "version": "1.4.0",
+  "author" : "Vahid Aslani" ,
   "description": "",
   "main": "src/main.ts",
   "scripts": {
@@ -12,8 +13,7 @@
   "bin": {
     "kpr": "dist/main.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["keep password" , "encryption" ],
   "license": "MIT",
   "dependencies": {
     "@types/readline-sync": "^1.4.8",

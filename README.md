@@ -16,8 +16,8 @@ To install `keepi`, run the following npm command:
 
 After installation, use the following command to access the menu:
 
-```javascript
-kpi;
+```bash
+ kpi
 ```
 
 1. Enter new Password

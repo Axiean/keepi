@@ -5,7 +5,7 @@
     "name": "Vahid Aslani",
     "email": "axieans@gmail.com"
   },
-  "description": "",
+  "description": "Keepi is a Node.js npm package that allows users to securely store and manage passwords locally on their own machine.",
   "main": "src/main.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",

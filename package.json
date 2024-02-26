@@ -1,10 +1,10 @@
 {
   "name": "keepi",
   "version": "1.0.0",
-  "author" :{
-    "name" :  "Vahid Aslani" , 
-    "email" :  "axieans@gmail.com"
-  } ,
+  "author": {
+    "name": "Vahid Aslani",
+    "email": "axieans@gmail.com"
+  },
   "description": "",
   "main": "src/main.ts",
   "scripts": {
@@ -23,13 +23,17 @@
   "bugs": {
     "url": "https://github.com/Axiean/keepi"
   },
-  "keywords": ["keep password" , "encryption" ],
+  "keywords": [
+    "keep password",
+    "encryption"
+  ],
   "license": "MIT",
   "dependencies": {
     "@types/readline-sync": "^1.4.8",
     "boxen": "^6.2.0",
     "chalk": "^4.1.2",
     "commander": "^12.0.0",
+    "console-table-printer": "^2.12.0",
     "readline": "^1.3.0",
     "readline-sync": "^1.4.10",
     "reflect-metadata": "^0.2.1",

@@ -1,30 +1,9 @@
 import { PasswordRepository } from '../database/repositories/password.repository';
-import { checkSecretKeyExistance, validateSecretKey } from './Secret.service';
+import { checkSecretValidity } from './Secret.service';
 import * as readlineSync from 'readline-sync';
-import { encrypt } from '../utils/encrypt';
-import { errorLog, successLog } from './Logger.service';
-
-const checkSecretValidity = async () => {
-  const hasSecretKey = await checkSecretKeyExistance();
-  let validSecret = false;
-  let enteredSecret = '';
-
-  while (!validSecret) {
-    if (hasSecretKey) {
-      enteredSecret = readlineSync.question('Enter your secret key: ', {
-        hideEchoBack: true,
-      });
-
-      validSecret = await validateSecretKey(enteredSecret);
-
-      if (!validSecret) {
-        errorLog('Secret key does not match! Please try again.');
-      } else {
-        return enteredSecret;
-      }
-    }
-  }
-};
+import { decrypt, encrypt } from '../utils/encrypt';
+import { errorLog, successLog, warnLog } from './Logger.service';
+import { Table } from 'console-table-printer';
 
 const checkUniquePassName = async () => {
   let checkUniquePassName = true;
@@ -79,9 +58,17 @@ export const getPasswordByName = async (passName?: string) => {
 
   const passwordEntity = await PasswordRepository.findOneBy({ passName });
   if (!passwordEntity) errorLog(`password named ${passName} doesnt exist.`);
+  const decryptedPassword = decrypt(passwordEntity.encryptedPassword, secret);
+
+  successLog(`your password for ${passName} is: `);
+  console.log(decryptedPassword);
+  return;
 };
 
 export const deletePasswordByName = async () => {
+  const secret = await checkSecretValidity();
+  if (!secret) return;
+
   const passName = readlineSync.question('Enter password name: ');
   const passwordEntity = await PasswordRepository.findOneBy({ passName });
 
@@ -91,4 +78,34 @@ export const deletePasswordByName = async () => {
   }
 
   await PasswordRepository.delete(passwordEntity);
+  successLog(`Password named ${passName} deleted.`);
+};
+
+export const showPasswordsList = async () => {
+  const secret = await checkSecretValidity();
+  if (!secret) return;
+
+  const passwordsName = await PasswordRepository.find({
+    select: {
+      passName: true,
+      id: true,
+      created_at: true,
+    },
+  });
+
+  if (passwordsName.length === 0) {
+    warnLog('You have no passwords yet!');
+    return;
+  }
+
+  const table = new Table();
+
+  passwordsName.forEach((item) => {
+    table.addRow({
+      id: item.id,
+      'password name': item.passName,
+      createdAt: item.created_at,
+    });
+  });
+  table.printTable();
 };

@@ -1,11 +1,15 @@
 import { Command } from 'commander';
-import { decrypt } from './utils/encrypt';
 import * as readlineSync from 'readline-sync';
-import { setSecret } from './services/Secret.service';
+import {
+  askForNewSecret,
+  editSecretKey,
+  setSecret,
+} from './services/Secret.service';
 import {
   deletePasswordByName,
   getPasswordByName,
   setNewPassword,
+  showPasswordsList,
 } from './services/Password.service';
 
 export const displayMenuAndGetOption = (): string => {
@@ -13,7 +17,8 @@ export const displayMenuAndGetOption = (): string => {
     'Enter new Password',
     'Find Password',
     'Delete password',
-    'Set/Edit secret key',
+    'Edit secret key',
+    'Passwords list',
   ];
   const index = readlineSync.keyInSelect(menuOptions, 'Select an option:');
 
@@ -36,8 +41,11 @@ export const executeMenuOption = (selectedOption: string): void => {
     case 'Delete password':
       deletePasswordByName();
       break;
-    case 'Set/Edit secret key':
-      setSecret();
+    case 'Edit secret key':
+      editSecretKey();
+      break;
+    case 'Passwords list':
+      showPasswordsList();
       break;
     default:
       console.log('Invalid option');
@@ -47,6 +55,7 @@ export const executeMenuOption = (selectedOption: string): void => {
 
 export const main = async () => {
   const program = new Command();
+
   program.on('SIGINT', () => process.exit(0));
   process.on('SIGINT', () => {
     console.log('\nExiting...');
@@ -57,6 +66,7 @@ export const main = async () => {
   const options = program.opts();
 
   if (program.args.length === 0) {
+    await askForNewSecret();
     const selectedOption = displayMenuAndGetOption();
     console.log(`You selected: ${selectedOption}`);
     executeMenuOption(selectedOption);

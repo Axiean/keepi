@@ -1,4 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Password {
@@ -10,4 +15,7 @@ export class Password {
 
   @Column({ type: 'text' })
   encryptedPassword: string;
+
+  @CreateDateColumn()
+  created_at: Date;
 }

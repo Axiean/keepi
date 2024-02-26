@@ -1,6 +1,6 @@
 {
   "name": "kpr",
-  "version": "1.4.0",
+  "version": "1.6.0",
   "author" : "Vahid Aslani" ,
   "description": "",
   "main": "src/main.ts",

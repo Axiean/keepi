@@ -1,6 +1,7 @@
 src/
+./src
+/src
 .prettierrc
-tsconfig.json
 tsconfig.build.json
 node_modules
 .gitignore

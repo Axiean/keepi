@@ -3,7 +3,9 @@ import * as os from 'os';
 import * as path from 'path';
 
 const homeDirectory = os.homedir();
-const dbFilePath = path.resolve(path.join(homeDirectory, '.kpit', 'db.sqlite'));
+const dbFilePath = path.resolve(
+  path.join(homeDirectory, '.keepi', 'db.sqlite'),
+);
 
 const dataSourceOptions = {
   type: 'sqlite',

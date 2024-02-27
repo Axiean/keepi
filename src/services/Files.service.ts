@@ -3,11 +3,13 @@ import * as path from 'path';
 import * as os from 'os';
 
 const homeDirectory = os.homedir();
-const dbFilePath = path.resolve(path.join(homeDirectory, '.kpit', 'db.sqlite'));
-const configFilePath = path.resolve(
-  path.join(homeDirectory, '.kpit', 'config.json'),
+const dbFilePath = path.resolve(
+  path.join(homeDirectory, '.keepi', 'db.sqlite'),
 );
-const configPath = path.resolve(path.join(homeDirectory, '.kpit'));
+const configFilePath = path.resolve(
+  path.join(homeDirectory, '.keepi', 'config.json'),
+);
+const configPath = path.resolve(path.join(homeDirectory, '.keepi'));
 
 const checkAndCreateDirectory = () => {
   if (!fs.existsSync(configPath)) {

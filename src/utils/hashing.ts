@@ -9,8 +9,9 @@ export function hashString(text: string): string {
 
 export function validateHashedString(
   text: string,
-  hashedTextWithSalt: string,
+  hashedTextWithSalt?: string,
 ): boolean {
+  if (!hashedTextWithSalt) return false;
   const salt = hashedTextWithSalt.slice(0, 32);
   const hash = createHash('sha256');
   hash.update(text + salt);

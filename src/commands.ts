@@ -1,10 +1,6 @@
 import { Command } from 'commander';
 import * as readlineSync from 'readline-sync';
-import {
-  askForNewSecret,
-  editSecretKey,
-  setSecret,
-} from './services/Secret.service';
+import { askForNewSecret, editSecretKey } from './services/Secret.service';
 import {
   deletePasswordByName,
   getPasswordByName,

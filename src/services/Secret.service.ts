@@ -30,7 +30,7 @@ export async function setSecret() {
     hideEchoBack: true,
   });
 
-  let reEnteredSecret: string;
+  let reEnteredSecret: string = '';
 
   while (secret !== reEnteredSecret) {
     reEnteredSecret = readlineSync.question('Re-enter secret-key: ', {
@@ -73,8 +73,9 @@ export async function askForNewSecret() {
 export const validateSecretKey = async (
   secretKey: string,
 ): Promise<boolean> => {
-  const { secret: storedSecretKey } = await SecretRepository.findOneBy({});
-  return validateHashedString(secretKey, storedSecretKey);
+  const secretEntity = await SecretRepository.findOneBy({});
+
+  return validateHashedString(secretKey, secretEntity?.secret);
 };
 
 export const checkSecretValidity = async () => {

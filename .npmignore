@@ -1,6 +1,5 @@
-
-src
+/node_modules
+/src
 .prettierrc
-tsconfig.build.json
-node_modules
-./tsconfig.tsbuildinfo
+package-lock.json
+

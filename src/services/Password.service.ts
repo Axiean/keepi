@@ -1,17 +1,18 @@
 import { PasswordRepository } from '../database/repositories/password.repository';
 import { checkSecretValidity } from './Secret.service';
-import * as readlineSync from 'readline-sync';
 import { decrypt, encrypt } from '../utils/encrypt';
 import { boxedLog, errorLog, successLog, warnLog } from './Logger.service';
 import { Table } from 'console-table-printer';
 import { PASSWORD_CONFIG } from '../config/password.config';
+import { askForSensetive, askForUsual } from './Readline.service';
+import moment from 'moment';
 
 const checkUniquePassName = async () => {
   let checkUniquePassName = true;
   let passName = '';
 
   while (checkUniquePassName) {
-    passName = readlineSync.question('Enter password name: ');
+    passName = askForUsual('Enter password name: ');
     checkUniquePassName = await PasswordRepository.existsBy({ passName });
     if (checkUniquePassName) {
       errorLog(`Password named ${passName} exists , Try another name...`);
@@ -27,9 +28,7 @@ export const setNewPassword = async (password?: string) => {
   const passName = await checkUniquePassName();
 
   if (!password) {
-    password = readlineSync.question('Enter your password: ', {
-      hideEchoBack: true,
-    });
+    password = askForSensetive('Enter your password: ');
   }
 
   if (!password || !passName) {
@@ -54,15 +53,14 @@ export const getPasswordByName = async (passName?: string) => {
   if (!secret) return;
 
   if (!passName) {
-    passName = readlineSync.question('Enter password name: ');
+    passName = askForUsual('Enter password name: ');
   }
 
   const passwordEntity = await PasswordRepository.findOneBy({ passName });
   if (!passwordEntity) errorLog(`password named ${passName} doesnt exist.`);
   const decryptedPassword = decrypt(passwordEntity.encryptedPassword, secret);
 
-  successLog(`your password for ${passName} is: `);
-  console.log(decryptedPassword);
+  boxedLog(passName, decryptedPassword);
   return;
 };
 
@@ -70,7 +68,7 @@ export const deletePasswordByName = async () => {
   const secret = await checkSecretValidity();
   if (!secret) return;
 
-  const passName = readlineSync.question('Enter password name: ');
+  const passName = askForUsual('Enter password name: ');
   const passwordEntity = await PasswordRepository.findOneBy({ passName });
 
   if (!passwordEntity) {
@@ -110,7 +108,7 @@ export const showPasswordsList = async () => {
     table.addRow({
       id: item.id,
       'password name': item.passName,
-      createdAt: item.created_at,
+      createdAt: moment(item.created_at).format('llll'),
     });
   });
   table.printTable();

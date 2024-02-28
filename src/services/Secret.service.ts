@@ -1,9 +1,9 @@
 import { SecretRepository } from '../database/repositories/secret.repository';
-import * as readlineSync from 'readline-sync';
 import { hashString, validateHashedString } from '../utils/hashing';
 import { errorLog, successLog, welcomeLog } from './Logger.service';
 import { PasswordRepository } from '../database/repositories/password.repository';
 import { decrypt, encrypt } from '../utils/encrypt';
+import { askForSensetive } from './Readline.service';
 const chalk = require('chalk');
 
 export async function setSecret() {
@@ -26,16 +26,12 @@ export async function setSecret() {
   `,
   );
 
-  const secret = readlineSync.question('Set new secret-key: ', {
-    hideEchoBack: true,
-  });
+  const secret = askForSensetive('Set new secret-key: ');
 
   let reEnteredSecret: string = '';
 
   while (secret !== reEnteredSecret) {
-    reEnteredSecret = readlineSync.question('Re-enter secret-key: ', {
-      hideEchoBack: true,
-    });
+    reEnteredSecret = askForSensetive('Re-enter secret-key: ');
   }
 
   const hashedSecret = hashString(secret);
@@ -85,9 +81,7 @@ export const checkSecretValidity = async () => {
 
   while (!validSecret) {
     if (hasSecretKey) {
-      enteredSecret = readlineSync.question('Enter your secret key: ', {
-        hideEchoBack: true,
-      });
+      enteredSecret = askForSensetive('Enter your secret key: ');
 
       validSecret = await validateSecretKey(enteredSecret);
 
@@ -106,35 +100,24 @@ export const editSecretKey = async () => {
   let newSecretKey: string;
   let reRnteredNewSecretKey: string;
 
-  currentSecret = readlineSync.question('Enter your current secret key:', {
-    hideEchoBack: true,
-  });
+  currentSecret = askForSensetive('Enter your current secret key:');
   currentSecretValidity = await validateSecretKey(currentSecret);
 
   while (!currentSecretValidity) {
     errorLog('Wrong secret Key! ');
-    currentSecret = readlineSync.question('Re-enter your secret key:', {
-      hideEchoBack: true,
-    });
+    currentSecret = askForSensetive('Re-enter your secret key:');
   }
 
-  newSecretKey = readlineSync.question('Enter new secret key:', {
-    hideEchoBack: true,
-  });
+  newSecretKey = askForSensetive('Enter new secret key:');
 
-  reRnteredNewSecretKey = readlineSync.question('Re-enter new secret key:', {
-    hideEchoBack: true,
-  });
+  reRnteredNewSecretKey = askForSensetive('Re-enter new secret key:');
 
   while (newSecretKey !== reRnteredNewSecretKey) {
     errorLog('Re-entered key does not match!');
-    reRnteredNewSecretKey = readlineSync.question('Re-enter your secret key:', {
-      hideEchoBack: true,
-    });
+    reRnteredNewSecretKey = askForSensetive('Re-enter your secret key:');
   }
 
   const hashedSecret = hashString(newSecretKey);
-
   await SecretRepository.update(
     {},
     {

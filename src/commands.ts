@@ -66,8 +66,6 @@ export const main = async () => {
 
   const options = program.opts();
 
-  // console.log(options);
-
   program.command('set <password>').action(async (password) => {
     setNewPassword(password);
   });

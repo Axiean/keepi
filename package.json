@@ -9,11 +9,11 @@
   "main": "src/main.ts",
   "scripts": {
     "dev": "npx tsc -w",
-    "start": "node lib/main.js",
+    "start": "node lib/src/main.js",
     "test": "mocha"
   },
   "bin": {
-    "kpi": "lib/main.js"
+    "kpi": "lib/src/main.js"
   },
   "repository": {
     "type": "git",

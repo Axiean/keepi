@@ -8,6 +8,9 @@ import {
   setNewPassword,
   showPasswordsList,
 } from './services/Password.service';
+import { CommandOptionsType } from './types/command-options.type';
+import * as packageJson from '../package.json';
+import { boxedLog } from './services/Logger.service';
 
 export const displayMenuAndGetOption = (): string => {
   const menuOptions = [
@@ -57,14 +60,15 @@ export const main = async () => {
     .description(
       'Keepi is a npm package that allows users to securely store and manage passwords locally on their own machine.',
     )
-    .action(async () => {
-      await askForNewSecret();
-      const selectedOption = displayMenuAndGetOption();
-      console.log(`You selected: ${selectedOption}`);
-      executeMenuOption(selectedOption);
+    .option('-v , --version', ' print Keepi version')
+    .action(async (options) => {
+      if (Object.keys(options).length === 0) {
+        await askForNewSecret();
+        const selectedOption = displayMenuAndGetOption();
+        console.log(`You selected: ${selectedOption}`);
+        executeMenuOption(selectedOption);
+      }
     });
-
-  const options = program.opts();
 
   program.command('set <password>').action(async (password) => {
     setNewPassword(password);
@@ -91,4 +95,7 @@ export const main = async () => {
     });
 
   program.parse(process.argv);
+  const options = program.opts();
+
+  if (options.version) boxedLog('keepi version', packageJson.version);
 };

@@ -54,7 +54,7 @@ Ensure the security of your home directory and regularly back up the contents of
 
 Contributions are always welcome!
 
-Feel free to contribute by reporting issues, suggesting features, or submitting pull requests on the GitHub repository.
+Feel free to contribute by reporting issues, suggesting features, or submitting pull requests on the [GitHub](https://github.com/Axiean/keepi).
 
 ## License
 

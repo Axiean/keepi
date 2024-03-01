@@ -1,6 +1,6 @@
 {
   "name": "keepi",
-  "version": "1.0.8",
+  "version": "1.0.11",
   "author": {
     "name": "Vahid Aslani",
     "email": "axieans@gmail.com"
@@ -9,12 +9,9 @@
   "main": "src/main.ts",
   "scripts": {
     "dev": "npx tsc -w",
+    "build" : "npx tsc",
     "start": "node lib/src/main.js",
-    "test": "mocha",
-    "puub": "npm run prepublish:clean && npm publish && npm run postpublish:restore",
-    "prepublish": "npm run prepublish:clean",
-    "prepublish:clean": "rimraf src",
-    "postpublish:restore": "git checkout -- src"
+    "test": "mocha"
   },
   "files": [
     "LICENCE",

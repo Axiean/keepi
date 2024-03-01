@@ -111,6 +111,6 @@
     "node_modules",
     "test/**/*.ts",   // Exclude test files in the 'test' directory
     "spec/**/*.ts",   // Exclude test files in the 'spec' directory
-    "dist"            // Exclude the 'dist' directory
+    "lib"            // Exclude the 'dist' directory
   ]
 }

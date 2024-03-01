@@ -29,7 +29,15 @@
   },
   "keywords": [
     "keep password",
-    "encryption"
+    "encryption" , 
+    "Secure password storage" ,  
+    "Local database" ,  
+    "Password management" ,  
+    "Password retrieval" , 
+    "Password deletion" , 
+    "Contributing" ,  
+    "Security" 
+
   ],
   "license": "MIT",
   "dependencies": {

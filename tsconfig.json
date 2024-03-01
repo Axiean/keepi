@@ -109,8 +109,8 @@
   "include": ["src/**/*.ts"],
   "exclude": [
     "node_modules",
-    "test/**/*.ts",   // Exclude test files in the 'test' directory
-    "spec/**/*.ts",   // Exclude test files in the 'spec' directory
+    "tests/**/*.ts",   // Exclude test files in the 'test' directory
+    // "spec/**/*.ts",   // Exclude test files in the 'spec' directory
     "lib"            // Exclude the 'dist' directory
   ]
 }

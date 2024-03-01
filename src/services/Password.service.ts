@@ -7,44 +7,23 @@ import { PASSWORD_CONFIG } from '../config/password.config';
 import { askForSensetive, askForUsual } from './Readline.service';
 import moment from 'moment';
 
-const checkUniquePassName = async () => {
-  let checkUniquePassName = true;
-  let passName = '';
-
-  while (checkUniquePassName) {
-    passName = askForUsual('Enter password name: ');
-    checkUniquePassName = await PasswordRepository.existsBy({ passName });
-    if (checkUniquePassName) {
-      errorLog(`Password named ${passName} exists , Try another name...`);
-    }
-  }
-  return passName;
-};
-
 export const setNewPassword = async (password?: string) => {
   const secret = await checkSecretValidity();
   if (!secret) return;
-
-  const passName = await checkUniquePassName();
-
+  const passName = await askForUniquePasswordName();
   if (!password) {
     password = askForSensetive('Enter your password: ');
   }
-
   if (!password || !passName) {
     errorLog('Both password and name are required.');
     return;
   }
-
   const encryptedPassword = encrypt(password, secret);
-
   const newPass = PasswordRepository.create({
     encryptedPassword,
     passName,
   });
-
   await PasswordRepository.save(newPass);
-
   successLog(`password named ${newPass.passName} created succesfully`);
 };
 
@@ -146,3 +125,20 @@ export async function generatePassword(
 
   boxedLog('Generated Password', password);
 }
+
+const askForUniquePasswordName = async () => {
+  let passName = '';
+
+  while (true) {
+    passName = askForUsual('Enter password name: ');
+    const isUnique = await PasswordRepository.existsBy({ passName });
+
+    if (!isUnique) {
+      break;
+    }
+
+    errorLog(`Password named ${passName} exists, try another name...`);
+  }
+
+  return passName;
+};
